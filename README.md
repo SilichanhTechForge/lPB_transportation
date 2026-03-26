@@ -1,6 +1,8 @@
 # LpbGO - Luang Prabang Transport App
 
-Welcome to **LpbGO**, a transportation management backend and mobile-friendly frontend for Luang Prabang public transit! Similar to modern transport apps like BudapestGO, LpbGO aims to provide seamless route scheduling, ticket purchasing, and smart boarding validation.
+Welcome to **LpbGO**, a smart transportation and ticketing platform designed specifically for Luang Prabang public transit! 
+
+> After struggling to navigate Laos without transit routes on Google Maps, I built this smart app to help tourists and locals easily travel around Luang Prabang. LpbGO provides fast digital ticketing, clear route info, and seamless cashless payments via the local Phajay API for a stress-free experience.
 
 This project was built using **F#**, **ASP.NET Core**, and standard web technologies for the frontend (HTML, CSS, JS).
 
