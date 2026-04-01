@@ -7,9 +7,11 @@
   <ItemGroup>
     <Compile Include="Models.fs" />
     <Compile Include="DataAccess.fs" />
+    <Compile Include="Views.fs" />
     <Compile Include="Controllers/TransportController.fs" />
     <Compile Include="Controllers/TicketsController.fs" />
     <Compile Include="Controllers/SupportController.fs" />
+    <Compile Include="Controllers/PageController.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

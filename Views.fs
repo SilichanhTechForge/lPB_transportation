@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LpbGO | Luang Prabang Transport</title>
-    <style>
+﻿namespace LpbGO.Views
+
+open Giraffe.ViewEngine
+
+module AppViews =
+
+    let indexCss = """
+
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 
         :root {
@@ -374,93 +375,11 @@
             resize: none;
             height: 100px;
         }
-    </style>
-</head>
-<body>
+    
+"""
 
-    <div class="header">
-        <h1>LpbGO</h1>
-        <p>Smart Travel in Luang Prabang</p>
-    </div>
+    let indexJs = """
 
-    <div class="container">
-        <div class="form-group">
-            <label>Departure</label>
-            <select id="fromLocation">
-                <option value="">Select departure point</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Destination</label>
-            <select id="toLocation">
-                <option value="">Select destination</option>
-            </select>
-        </div>
-
-        <button class="search-btn" onclick="searchRoutes()">Find Routes</button>
-
-        <div class="results" id="resultsArea">
-            <!-- Results injected here -->
-        </div>
-    </div>
-
-    <!-- Phajay Payment Modal -->
-    <div class="modal-overlay" id="paymentModal">
-        <div class="modal">
-            <h2>Phajay BCEL Payment</h2>
-            <p id="paymentAmount">Amount: ₭0</p>
-            <img id="qrCodeImage" src="" alt="BCEL QR Code">
-            <p style="font-size: 0.8rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">Scan using Phajay App / BCEL One</p>
-            <div>
-                <button class="action-btn" onclick="simulatePaymentComplete()">I've Paid</button>
-                <button class="close-btn" onclick="closeModal()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MAV-style Fullscreen Animated Ticket / QR -->
-    <div class="fullscreen-ticket" id="liveTicket">
-        <div class="ticket-header">
-            <div onclick="closeTicket()" style="cursor: pointer;">❮ Back</div>
-            <div>Valid Ticket</div>
-            <div style="width: 50px;"></div>
-        </div>
-        <div style="margin-bottom: 2rem; text-align: center;">
-            <h2 id="ticketRouteTitle" style="margin-bottom: 0.5rem;">Bus Transfer</h2>
-            <p id="ticketDate" style="color: var(--text-muted);"></p>
-        </div>
-        
-        <div class="ticket-animation-box" onclick="toggleQR()">
-            <!-- Using aztec or QR for validation, like MAV -->
-            <img id="finalTicketQR" src="" alt="Ticket Code" style="width: 90%; height: 90%; filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.1));">
-            <div class="pulse-overlay" id="scanPulse"></div>
-        </div>
-        
-        <p style="margin-top: 2rem; color: var(--text-muted);">Show to Driver / Inspector</p>
-        <div id="ticketIdDisplay" style="margin-top: 1rem; font-family: monospace; font-size: 1.2rem; background: rgba(0,0,0,0.3); padding: 0.5rem 1rem; border-radius: 8px;"></div>
-    </div>
-
-    <!-- Floating Support Bubble -->
-    <div class="support-fab" onclick="toggleSupport()">💬</div>
-
-    <!-- Support Panel -->
-    <div class="support-panel" id="supportPanel">
-        <h3>Contact Support</h3>
-        <select id="supportCategory">
-            <option value="Payment Issue">Payment Issue</option>
-            <option value="Lost Item">Lost Item</option>
-            <option value="App Bug">App Bug</option>
-            <option value="General Question">General Question</option>
-        </select>
-        <textarea id="supportMessage" placeholder="Describe your issue..."></textarea>
-        <div style="display: flex; gap: 10px;">
-            <button id="supportSubmitBtn" class="action-btn" style="flex: 1; margin: 0;" onclick="submitSupport()">Send</button>
-            <button class="close-btn" style="padding: 0.8rem 1rem;" onclick="toggleSupport()">Cancel</button>
-        </div>
-    </div>
-
-    <script>
         let currentBookingScheduleId = null;
 
         // Load locations on startup
@@ -638,6 +557,240 @@
                 btn.disabled = false;
             }
         }
-    </script>
-</body>
-</html>
+    
+"""
+
+    let indexView = 
+        html [ _lang "en" ] [
+            head [] [
+                meta [ _charset "UTF-8" ]
+                meta [ _name "viewport"; _content "width=device-width, initial-scale=1.0" ]
+                title [] [ str "LpbGO | Luang Prabang Transport" ]
+                style [] [ rawText indexCss ]
+            ]
+            body [] [
+                div [ _class "header" ] [
+                    h1 [] [ str "LpbGO" ]
+                    p [] [ str "Smart Travel in Luang Prabang" ]
+                ]
+
+                div [ _class "container" ] [
+                    div [ _class "form-group" ] [
+                        label [] [ str "Departure" ]
+                        select [ _id "fromLocation" ] [
+                            option [ _value "" ] [ str "Select departure point" ]
+                        ]
+                    ]
+                    div [ _class "form-group" ] [
+                        label [] [ str "Destination" ]
+                        select [ _id "toLocation" ] [
+                            option [ _value "" ] [ str "Select destination" ]
+                        ]
+                    ]
+                    button [ _class "search-btn"; _onclick "searchRoutes()" ] [ str "Find Routes" ]
+                    div [ _class "results"; _id "resultsArea" ] []
+                ]
+
+                div [ _class "modal-overlay"; _id "paymentModal" ] [
+                    div [ _class "modal" ] [
+                        h2 [] [ str "Phajay BCEL Payment" ]
+                        p [ _id "paymentAmount" ] [ str "Amount: ₭0" ]
+                        img [ _id "qrCodeImage"; _src ""; _alt "BCEL QR Code" ]
+                        p [ _style "font-size: 0.8rem; margin-top: -0.5rem; margin-bottom: 1.5rem;" ] [ str "Scan using Phajay App / BCEL One" ]
+                        div [] [
+                            button [ _class "action-btn"; _onclick "simulatePaymentComplete()" ] [ str "I've Paid" ]
+                            button [ _class "close-btn"; _onclick "closeModal()" ] [ str "Cancel" ]
+                        ]
+                    ]
+                ]
+
+                div [ _class "fullscreen-ticket"; _id "liveTicket" ] [
+                    div [ _class "ticket-header" ] [
+                        div [ _onclick "closeTicket()"; _style "cursor: pointer;" ] [ str " Back" ]
+                        div [] [ str "Valid Ticket" ]
+                        div [ _style "width: 50px;" ] []
+                    ]
+                    div [ _style "margin-bottom: 2rem; text-align: center;" ] [
+                        h2 [ _id "ticketRouteTitle"; _style "margin-bottom: 0.5rem;" ] [ str "Bus Transfer" ]
+                        p [ _id "ticketDate"; _style "color: var(--text-muted);" ] []
+                    ]
+                    div [ _class "ticket-animation-box"; _onclick "toggleQR()" ] [
+                        img [ _id "finalTicketQR"; _src ""; _alt "Ticket Code"; _style "width: 90%; height: 90%; filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.1));" ]
+                        div [ _class "pulse-overlay"; _id "scanPulse" ] []
+                    ]
+                    p [ _style "margin-top: 2rem; color: var(--text-muted);" ] [ str "Show to Driver / Inspector" ]
+                    div [ _id "ticketIdDisplay"; _style "margin-top: 1rem; font-family: monospace; font-size: 1.2rem; background: rgba(0,0,0,0.3); padding: 0.5rem 1rem; border-radius: 8px;" ] []
+                ]
+
+                div [ _class "support-fab"; _onclick "toggleSupport()" ] [ str "" ]
+
+                div [ _class "support-panel"; _id "supportPanel" ] [
+                    h3 [] [ str "Contact Support" ]
+                    select [ _id "supportCategory" ] [
+                        option [ _value "Payment Issue" ] [ str "Payment Issue" ]
+                        option [ _value "Lost Item" ] [ str "Lost Item" ]
+                        option [ _value "App Bug" ] [ str "App Bug" ]
+                        option [ _value "General Question" ] [ str "General Question" ]
+                    ]
+                    textarea [ _id "supportMessage"; _placeholder "Describe your issue..." ] []
+                    div [ _style "display: flex; gap: 10px;" ] [
+                        button [ _id "supportSubmitBtn"; _class "action-btn"; _style "flex: 1; margin: 0;"; _onclick "submitSupport()" ] [ str "Send" ]
+                        button [ _class "close-btn"; _style "padding: 0.8rem 1rem;"; _onclick "toggleSupport()" ] [ str "Cancel" ]
+                    ]
+                ]
+
+                script [] [ rawText indexJs ]
+            ]
+        ]
+
+
+    let inspectorCss = """
+
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #0f172a;
+            --primary: #3b82f6; /* Blue for inspector */
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { margin-bottom: 0.5rem; text-align: center; color: var(--primary); }
+        p { color: #94a3b8; text-align: center; margin-bottom: 2rem; }
+
+        .scanner-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        #reader { width: 100%; }
+
+        .result-panel {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 400px;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .success { background: rgba(16, 185, 129, 0.2); border: 2px solid var(--success); color: var(--success); }
+        .error { background: rgba(239, 68, 68, 0.2); border: 2px solid var(--danger); color: var(--danger); }
+
+        button {
+            margin-top: 1rem;
+            padding: 0.8rem 2rem;
+            background: var(--text-main);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    
+"""
+
+    let inspectorJs = """
+
+        let html5QrcodeScanner;
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // Our tickets were generated with prefix "VALID_TICKET:"
+            if(decodedText.startsWith("VALID_TICKET:")) {
+                const ticketId = decodedText.split("VALID_TICKET:")[1];
+                html5QrcodeScanner.pause(true); // Stop scanning while checking
+                validateTicketOnServer(ticketId);
+            } else {
+                showResult("Invalid QR Format!", false);
+            }
+        }
+
+        async function validateTicketOnServer(ticketId) {
+            try {
+                // Call the F# Validate Endpoint
+                const res = await fetch('/tickets/validate/' + ticketId, { method: 'POST' });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    showResult("âœ… Valid Ticket consumed!<br>Passenger can enter.", true);
+                } else {
+                    showResult("âŒ " + (data.message || "Ticket invalid or already used."), false);
+                }
+            } catch (err) {
+                showResult("âŒ Network Error: Could not reach server.", false);
+            }
+        }
+
+        function showResult(message, isSuccess) {
+            const panel = document.getElementById('resultPanel');
+            const text = document.getElementById('resultText');
+            
+            panel.className = 'result-panel ' + (isSuccess ? 'success' : 'error');
+            text.innerHTML = message;
+            panel.style.display = 'block';
+        }
+
+        function resetScanner() {
+            document.getElementById('resultPanel').style.display = 'none';
+            html5QrcodeScanner.resume(); // Resume webcam
+        }
+
+        // Initialize scanner when DOM loads
+        window.addEventListener('load', () => {
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", { fps: 10, qrbox: {width: 250, height: 250} }, /* verbose= */ false);
+            html5QrcodeScanner.render(onScanSuccess);
+        });
+    
+"""
+
+    let inspectorView = 
+        html [ _lang "en" ] [
+            head [] [
+                meta [ _charset "UTF-8" ]
+                meta [ _name "viewport"; _content "width=device-width, initial-scale=1.0" ]
+                title [] [ str "Inspector App - LpbGO" ]
+                script [ _src "https://unpkg.com/html5-qrcode" ] []
+                style [] [ rawText inspectorCss ]
+            ]
+            body [] [
+                h1 [] [ str "Inspector Terminal" ]
+                p [] [ str "Scan passenger QR codes to validate entry." ]
+
+                div [ _class "scanner-container" ] [
+                    div [ _id "reader" ] []
+                ]
+
+                div [ _id "resultPanel"; _class "result-panel" ] [
+                    div [ _id "resultText" ] []
+                    button [ _onclick "resetScanner()" ] [ str "Scan Next Ticket" ]
+                ]
+
+                script [] [ rawText inspectorJs ]
+            ]
+        ]
