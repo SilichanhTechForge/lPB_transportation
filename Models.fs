@@ -39,3 +39,11 @@ type Ticket = {
     PurchaseDate: System.DateTime
     IsValid: bool
 }
+
+type SupportMessage = {
+    Id: string
+    Category: string
+    Message: string
+    SubmittedAt: System.DateTime
+    IsResolved: bool
+}

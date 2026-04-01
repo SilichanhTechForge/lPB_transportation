@@ -40,3 +40,4 @@ module MockDb =
     ]
 
     let mutable Tickets = new List<Ticket>()
+    let mutable SupportMessages = new List<SupportMessage>()

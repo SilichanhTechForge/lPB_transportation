@@ -9,7 +9,12 @@
     <Compile Include="DataAccess.fs" />
     <Compile Include="Controllers/TransportController.fs" />
     <Compile Include="Controllers/TicketsController.fs" />
+    <Compile Include="Controllers/SupportController.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Giraffe.ViewEngine" Version="1.*" />
   </ItemGroup>
 
 </Project>
