@@ -18,3 +18,8 @@ type PageController () =
     member this.Inspector() : IActionResult =
         let htmlString = RenderView.AsString.htmlDocument AppViews.inspectorView
         this.Content(htmlString, "text/html") :> IActionResult
+
+    [<HttpGet("driver")>]
+    member this.Driver() : IActionResult =
+        let htmlString = RenderView.AsString.htmlDocument AppViews.driverView
+        this.Content(htmlString, "text/html") :> IActionResult

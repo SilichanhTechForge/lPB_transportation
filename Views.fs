@@ -1,4 +1,4 @@
-﻿namespace LpbGO.Views
+namespace LpbGO.Views
 
 open Giraffe.ViewEngine
 
@@ -156,6 +156,106 @@ module AppViews =
         .route-card:hover {
             transform: scale(1.02);
             background: rgba(30, 41, 59, 1);
+        }
+
+        .route-card.expanded {
+            transform: scale(1.02);
+            background: rgba(30, 41, 59, 1);
+            cursor: default;
+        }
+
+        .route-card.expanded::before {
+            background: #3b82f6; /* Highlight when expanded */
+        }
+
+        .route-details {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--glass-border);
+            animation: slideUp 0.3s ease;
+        }
+
+        .route-card.expanded .route-details {
+            display: block;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.4rem;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            width: 2px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .timeline-stop {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-stop:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-stop::before {
+            content: '';
+            position: absolute;
+            left: -1.35rem;
+            top: 0.2rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--primary);
+            z-index: 1;
+        }
+
+        .timeline-stop.passed::before {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .timeline-time {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .timeline-name {
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
         }
 
         .route-times {
@@ -423,26 +523,57 @@ module AppViews =
                 schedules.forEach(schedule => {
                     const priceFormatted = new Intl.NumberFormat('en-US').format(schedule.priceInKip);
                     const card = `
-                        <div class="route-card" onclick="bookTicket(${schedule.id}, ${schedule.priceInKip})">
-                            <div>
-                                <div class="route-times">
-                                    ${schedule.departureTime} <span>→</span> ${schedule.arrivalTime}
+                        <div class="route-card" onclick="toggleRouteDetails(this)">
+                            <div style="display:flex; justify-content: space-between; width: 100%; align-items: center; pointer-events: none;">
+                                <div>
+                                    <div class="route-times">
+                                        ${schedule.departureTime} <span>&rarr;</span> ${schedule.arrivalTime}
+                                    </div>
+                                    <div style="color: #10b981; font-size: 0.9rem; margin-top: 0.3rem;">
+                                        Route ID #${schedule.routeId} 
+                                    </div>
                                 </div>
-                                <div style="color: #10b981; font-size: 0.9rem; margin-top: 0.3rem;">
-                                    Route ID #${schedule.routeId} 
+                                <div class="route-price">
+                                    ₭${priceFormatted}
+                                    <div style="font-size: 0.8rem; opacity: 0.7; color: var(--text-muted); font-weight: normal; margin-top: 0.2rem;">Tap to expand ▼</div>
                                 </div>
                             </div>
-                            <div class="route-price">
-                                ₭${priceFormatted}
-                                <div style="font-size: 0.8rem; opacity: 0.7; color: var(--text-muted); font-weight: normal;">Tap to book</div>
+                            <div class="route-details" onclick="event.stopPropagation()">
+                                <div class="timeline">
+                                    <div class="timeline-stop passed">
+                                        <div class="timeline-time">${schedule.departureTime}</div>
+                                        <div class="timeline-name">Departure Point</div>
+                                    </div>
+                                    <div class="timeline-stop">
+                                        <div class="timeline-time">En route</div>
+                                        <div class="timeline-name">Intermediate Stop (City Center)</div>
+                                    </div>
+                                    <div class="timeline-stop">
+                                        <div class="timeline-time">${schedule.arrivalTime}</div>
+                                        <div class="timeline-name">Arrival Point (Destination)</div>
+                                    </div>
+                                </div>
+                                <button class="book-btn" onclick="bookTicket(${schedule.id}, ${schedule.priceInKip})">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                                    Pay ₭${priceFormatted} with Phajay
+                                </button>
                             </div>
                         </div>
                     `;
                     resultsArea.insertAdjacentHTML('beforeend', card);
                 });
+
             } catch(e) {
                 resultsArea.innerHTML = '<div class="no-results" style="color: #ef4444">Error loading schedules.</div>';
             }
+        }
+
+        function toggleRouteDetails(element) {
+            // Collapse others
+            document.querySelectorAll('.route-card.expanded').forEach(card => {
+                if(card !== element) card.classList.remove('expanded');
+            });
+            element.classList.toggle('expanded');
         }
 
         async function bookTicket(scheduleId, priceInKip) {
@@ -794,3 +925,341 @@ module AppViews =
                 script [] [ rawText inspectorJs ]
             ]
         ]
+
+
+    let driverCss = """
+
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+        :root {
+            --bg-dark: #0f172a;
+            --surface: #1e293b;
+            --primary: #f59e0b; /* Amber for driver app */
+            --primary-hover: #d97706;
+            --danger: #ef4444;
+            --success: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 1.5rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #334155;
+            box-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .driver-info h1 {
+            font-size: 1.6rem;
+            margin: 0;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .driver-info p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.2rem;
+        }
+
+        .status-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 700;
+            border: 1px solid var(--success);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .container {
+            padding: 1.5rem;
+            flex: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--text-main);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .next-stop-card {
+            background: linear-gradient(145deg, var(--surface), #151e2b);
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--primary);
+            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .next-stop-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; height: 100%; width: 4px;
+            background: var(--primary);
+        }
+
+        .next-stop-card h3 {
+            color: var(--primary);
+            margin: 0 0 0.5rem 0;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        .stop-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            line-height: 1.1;
+        }
+
+        .stop-time {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0,0,0,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-dark);
+            box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: var(--danger);
+            border: 2px solid var(--danger);
+        }
+
+        .activity-feed {
+            margin-top: 2.5rem;
+        }
+        
+        .activity-feed h3 {
+            color: var(--text-muted);
+            font-size: 1rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.8rem;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .feed-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid #334155;
+            font-size: 1.05rem;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    """
+
+    let driverJs = """
+        let passengers = 12;
+
+        function updatePassengerCount() {
+            document.getElementById('passengerCount').innerText = passengers;
+            document.getElementById('passengerCountCard').style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                document.getElementById('passengerCountCard').style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function departStop() {
+            const btn = document.getElementById('departBtn');
+            btn.innerText = "Transit...";
+            btn.style.background = "#334155";
+            btn.style.color = "white";
+            btn.style.boxShadow = "none";
+            
+            setTimeout(() => {
+                document.getElementById('currentStopName').innerText = "Night Market";
+                document.getElementById('stopTime').innerText = "ETA: 14:15";
+                
+                btn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Arrive at Stop`;
+                btn.style.background = "var(--primary)";
+                btn.style.color = "var(--bg-dark)";
+                btn.style.boxShadow = "0 6px 15px rgba(245, 158, 11, 0.3)";
+                btn.onclick = arriveStop;
+                
+                logActivity("Departed Airport");
+            }, 1000);
+        }
+
+        function arriveStop() {
+            const btn = document.getElementById('departBtn');
+            document.getElementById('currentStopName').innerText = "Night Market (Arrived)";
+            btn.innerText = "Depart to Kuang Si";
+            btn.onclick = departStopFinal;
+            
+            // Simulate passengers boarding
+            let boarding = Math.floor(Math.random() * 6) + 1;
+            passengers += boarding;
+            updatePassengerCount();
+            
+            logActivity(`Arrived. +${boarding} boarding.`);
+        }
+
+        function departStopFinal() {
+            alert('End of simulated route for prototype.');
+        }
+
+        function logActivity(msg) {
+            const feed = document.getElementById('feedList');
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            feed.insertAdjacentHTML('afterbegin', `<div class="feed-item"><span>${msg}</span><span style="color:var(--text-muted)">${time}</span></div>`);
+        }
+    """
+
+    let driverView =
+        html [ _lang "en" ] [
+            head [] [
+                meta [ _charset "UTF-8" ]
+                meta [ _name "viewport"; _content "width=device-width, initial-scale=1.0" ]
+                title [] [ str "Driver Terminal - LpbGO" ]
+                style [] [ rawText driverCss ]
+            ]
+            body [] [
+                header [] [
+                    div [ _class "driver-info" ] [
+                        h1 [] [ str "Bus #42" ]
+                        p [] [ str "Route: Airport -> Kuang Si" ]
+                    ]
+                    div [ _class "status-badge" ] [ str "ON DUTY" ]
+                ]
+                
+                div [ _class "container" ] [
+                    div [ _class "stat-grid" ] [
+                        div [ _class "stat-card"; _id "passengerCountCard"; _style "transition: transform 0.2s ease;" ] [
+                            div [ _class "stat-value"; _id "passengerCount" ] [ str "12" ]
+                            div [ _class "stat-label" ] [ str "Passengers" ]
+                        ]
+                        div [ _class "stat-card" ] [
+                            div [ _class "stat-value"; _style "color: var(--success);" ] [ str "On Time" ]
+                            div [ _class "stat-label" ] [ str "Status" ]
+                        ]
+                    ]
+
+                    div [ _class "next-stop-card" ] [
+                        h3 [] [ str "Current / Next Stop" ]
+                        div [ _class "stop-name"; _id "currentStopName" ] [ str "Intl. Airport" ]
+                        div [ _class "stop-time"; _id "stopTime" ] [ str "Departure: 14:00" ]
+                    ]
+
+                    div [ _class "actions" ] [
+                        button [ _id "departBtn"; _class "btn btn-primary"; _onclick "departStop()" ] [ 
+                            rawText """<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> """
+                            str "Start Route" 
+                        ]
+                        button [ _class "btn btn-danger"; _onclick "alert('Emergency dispatched to HQ')" ] [ str "SOS Alert HQ" ]
+                    ]
+
+                    div [ _class "activity-feed" ] [
+                        h3 [] [ str "Recent Activity" ]
+                        div [ _id "feedList" ] [
+                            div [ _class "feed-item" ] [
+                                span [] [ str "Shift Started" ]
+                                span [ _style "color:var(--text-muted)" ] [ str "13:45" ]
+                            ]
+                        ]
+                    ]
+                ]
+                script [] [ rawText driverJs ]
+            ]
+        ]
+

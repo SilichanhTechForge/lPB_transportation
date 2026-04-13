@@ -25,3 +25,5 @@ bld/
 .DS_Store
 
 # End
+
+.fake
