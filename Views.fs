@@ -1263,3 +1263,166 @@ module AppViews =
             ]
         ]
 
+module AuthViews =
+    
+    let authCss = """
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .auth-container p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+
+        .link-text {
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .link-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            text-align: left;
+        }
+    """
+
+    let inline createView titleText subtitleText actionUrl btnText bottomText bottomLinkText bottomUrl error =
+        html [ _lang "en" ] [
+            head [] [
+                meta [ _charset "UTF-8" ]
+                meta [ _name "viewport"; _content "width=device-width, initial-scale=1.0" ]
+                title [] [ str (titleText + " | LpbGO") ]
+                style [] [ rawText authCss ]
+            ]
+            body [] [
+                div [ _class "auth-container" ] [
+                    h2 [] [ str titleText ]
+                    p [] [ str subtitleText ]
+                    
+                    if not (System.String.IsNullOrEmpty(error)) then
+                        div [ _class "error-message" ] [ str error ]
+                        
+                    form [ _action actionUrl; _method "POST" ] [
+                        div [ _class "form-group" ] [
+                            label [ _for "Username" ] [ str "Username" ]
+                            input [ _type "text"; _id "Username"; _name "Username"; _required ]
+                        ]
+                        div [ _class "form-group" ] [
+                            label [ _for "Password" ] [ str "Password" ]
+                            input [ _type "password"; _id "Password"; _name "Password"; _required ]
+                        ]
+                        button [ _type "submit" ] [ str btnText ]
+                    ]
+                    div [ _class "link-text" ] [
+                        span [] [ str bottomText ]
+                        a [ _href bottomUrl ] [ str bottomLinkText ]
+                    ]
+                ]
+            ]
+        ]
+        
+    let loginView error = createView "Welcome Back" "Log in to your LpbGO account" "/auth/login" "Log In" "Don't have an account? " "Sign Up" "/auth/login" error
+    
+    let registerView error = createView "Create Account" "Join LpbGO to easily manage your tickets" "/auth/register" "Sign Up" "Already have an account? " "Log In" "/auth/login" error

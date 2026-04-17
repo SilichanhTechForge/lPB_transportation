@@ -11,11 +11,13 @@
     <Compile Include="Controllers/TransportController.fs" />
     <Compile Include="Controllers/TicketsController.fs" />
     <Compile Include="Controllers/SupportController.fs" />
+    <Compile Include="Controllers/AuthController.fs" />
     <Compile Include="Controllers/PageController.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
     <PackageReference Include="Giraffe.ViewEngine" Version="1.*" />
   </ItemGroup>
 

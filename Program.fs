@@ -13,6 +13,8 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
+open Microsoft.AspNetCore.Authentication.Cookies
+
 
 module Program =
     let exitCode = 0
@@ -23,6 +25,13 @@ module Program =
         let builder = WebApplication.CreateBuilder(args)
 
         builder.Services.AddControllers()
+        
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(fun options -> 
+                options.LoginPath <- "/auth/login"
+                options.AccessDeniedPath <- "/auth/login"
+            ) |> ignore
+
 
         let app = builder.Build()
         
@@ -30,6 +39,7 @@ module Program =
         app.UseStaticFiles() |> ignore
         app.UseHttpsRedirection()
 
+        app.UseAuthentication()
         app.UseAuthorization()
         app.MapControllers()
 

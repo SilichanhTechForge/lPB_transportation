@@ -47,3 +47,15 @@ type SupportMessage = {
     SubmittedAt: System.DateTime
     IsResolved: bool
 }
+
+type User = {
+    Id: string
+    Username: string
+    PasswordHash: string
+}
+
+[<CLIMutable>]
+type AuthRequest = {
+    Username: string
+    Password: string
+}
