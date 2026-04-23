@@ -20,7 +20,7 @@ Welcome to **LpbGO**, a smart transportation and ticketing platform designed spe
 
 ---
 
-## 🏗️ Project Architecture & F# Implementation Report
+##  Project Architecture & F# Implementation Report
 
 For this semester's F# project (LpbGO), the aim was to build a robust public transit ticketing and management system. To maximize the utilization of functional programming paradigms, the application was architected entirely in F#.
 
@@ -50,7 +50,7 @@ For this semester's F# project (LpbGO), the aim was to build a robust public tra
 
 ---
 
-## 🚀 Running the Project Locally
+##  Running the Project Locally
 
 To test this project on your local machine:
 
@@ -64,5 +64,11 @@ To test this project on your local machine:
 
 ---
 
-## 📚 What I learned
+## What I learned
 This project successfully taught me how to combine the strict reliability of an F# functional backend with a dynamic, user-centric mobile web application. Transitioning from standard HTML files to a **Giraffe ViewEngine** SSR structure proved just how powerful F# is at bridging the gap between back-end data logic and front-end user experience without sacrificing type safety!
+## Screenshot
+<img width="1919" height="992" alt="Screenshot 2026-04-23 133009" src="https://github.com/user-attachments/assets/f6e8db2d-4dcc-4159-b625-0eb920b4cb26" />
+<img width="1916" height="1032" alt="Screenshot 2026-04-23 133001" src="https://github.com/user-attachments/assets/f3da083b-1789-4651-954c-6324570dcf9b" />
+<img width="1919" height="1040" alt="Screenshot 2026-04-23 132949" src="https://github.com/user-attachments/assets/26002f2f-7fd8-4084-9ebe-510df8b0486f" />
+<img width="1919" height="1037" alt="Screenshot 2026-04-23 132930" src="https://github.com/user-attachments/assets/076fc77c-a9e1-41c8-9e7f-9d7b10b6dd74" />
+
