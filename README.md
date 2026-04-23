@@ -1,5 +1,7 @@
 # LpbGO - Luang Prabang Transport App
 
+🌍 **Live Application:** [https://lpb-transportation.onrender.com/](https://lpb-transportation.onrender.com/)
+
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 Welcome to **LpbGO**, a smart transportation and ticketing platform designed specifically for Luang Prabang public transit! 
 
