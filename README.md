@@ -1,5 +1,6 @@
 # LpbGO - Luang Prabang Transport App
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 Welcome to **LpbGO**, a smart transportation and ticketing platform designed specifically for Luang Prabang public transit! 
 
 > After struggling to navigate Laos without transit routes on Google Maps, I built this smart app to help tourists and locals easily travel around Luang Prabang. LpbGO provides fast digital ticketing, clear route info, and seamless cashless payments via the local Phajay API for a stress-free experience.

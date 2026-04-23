@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: lpbgo-app
+    env: docker
+    plan: free
+    region: frankfurt
+    branch: main
